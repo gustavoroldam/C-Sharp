@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMVCADS2023.Models;
 
@@ -11,9 +12,11 @@ using WMVCADS2023.Models;
 namespace WMVCADS2023.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20230823012600_SalasV2")]
+    partial class SalasV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,25 +36,19 @@ namespace WMVCADS2023.Migrations
                     b.Property<DateTime>("aniversario")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("cursoID")
+                    b.Property<int>("cursoid")
                         .HasColumnType("int");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("nome")
                         .IsRequired()
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("periodo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
-                    b.HasIndex("cursoID");
+                    b.HasIndex("cursoid");
 
                     b.ToTable("Alunos");
                 });
@@ -134,7 +131,7 @@ namespace WMVCADS2023.Migrations
                 {
                     b.HasOne("WMVCADS2023.Models.Curso", "curso")
                         .WithMany()
-                        .HasForeignKey("cursoID")
+                        .HasForeignKey("cursoid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

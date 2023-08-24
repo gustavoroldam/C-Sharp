@@ -12,8 +12,8 @@ using WMVCADS2023.Models;
 namespace WMVCADS2023.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20230817230439_Aluno")]
-    partial class Aluno
+    [Migration("20230823230000_AlunosV3")]
+    partial class AlunosV3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,21 +36,53 @@ namespace WMVCADS2023.Migrations
                     b.Property<DateTime>("aniversario")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("cursoid")
+                    b.Property<int>("cursoID")
                         .HasColumnType("int");
 
-                    b.Property<string>("nome")
+                    b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("nome")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
                     b.Property<string>("periodo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
-                    b.HasIndex("cursoid");
+                    b.HasIndex("cursoID");
 
                     b.ToTable("Alunos");
+                });
+
+            modelBuilder.Entity("WMVCADS2023.Models.Atendimento", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("alunoid")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("data_hora")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("salaid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("alunoid");
+
+                    b.HasIndex("salaid");
+
+                    b.ToTable("Atendimento");
                 });
 
             modelBuilder.Entity("WMVCADS2023.Models.Curso", b =>
@@ -81,15 +113,16 @@ namespace WMVCADS2023.Migrations
 
                     b.Property<string>("descricao")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
 
                     b.Property<int>("equipamentos")
                         .HasColumnType("int");
 
                     b.Property<string>("monitor")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("situacao")
                         .IsRequired()
@@ -104,11 +137,26 @@ namespace WMVCADS2023.Migrations
                 {
                     b.HasOne("WMVCADS2023.Models.Curso", "curso")
                         .WithMany()
-                        .HasForeignKey("cursoid")
+                        .HasForeignKey("cursoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("curso");
+                });
+
+            modelBuilder.Entity("WMVCADS2023.Models.Atendimento", b =>
+                {
+                    b.HasOne("WMVCADS2023.Models.Aluno", "aluno")
+                        .WithMany()
+                        .HasForeignKey("alunoid");
+
+                    b.HasOne("WMVCADS2023.Models.Sala", "sala")
+                        .WithMany()
+                        .HasForeignKey("salaid");
+
+                    b.Navigation("aluno");
+
+                    b.Navigation("sala");
                 });
 #pragma warning restore 612, 618
         }

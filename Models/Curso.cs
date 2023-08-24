@@ -7,10 +7,12 @@ namespace WMVCADS2023.Models
     public class Curso
     {
         [Key]
+        [Display(Name ="ID")]
         public int id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Campo descrição é obrigatório")]
         [StringLength(35)]
+        [Display(Name ="Descricao")]
         public string descricao { get; set; }
 
     }
